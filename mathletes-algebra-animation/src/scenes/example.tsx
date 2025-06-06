@@ -30,7 +30,7 @@ export default makeScene2D(function* (view) {
       ref={sumFormula}
       tex={[
         'x_1', '+', 'x_2', '=', 
-        '-\\frac{\\textcolor{blue}{b}}{\\textcolor{red}{a}}'
+        '-\\frac{?}{?}'
       ]}
       fill="white"
       y={0}
@@ -44,7 +44,7 @@ export default makeScene2D(function* (view) {
       ref={productFormula}
       tex={[
         'x_1', '\\cdot','{x_2}', '=', 
-        '\\frac{\\textcolor{green}{c}}{\\textcolor{red}{a}}'
+        '\\frac{?}{?}'
       ]}
       fill="white"
       y={150}
@@ -59,4 +59,14 @@ export default makeScene2D(function* (view) {
     sumFormula().opacity(1, 1),
     productFormula().opacity(1, 1),
   );
+
+  yield* sumFormula().tex([
+        'x_1', '+', 'x_2', '=', 
+        '-\\frac{\\textcolor{blue}{b}}{\\textcolor{red}{a}}'
+      ], 1);
+
+  yield* productFormula().tex([
+        'x_1', '\\cdot','{x_2}', '=', 
+        '\\frac{\\textcolor{green}{c}}{\\textcolor{red}{a}}'
+      ], 1);
 });
