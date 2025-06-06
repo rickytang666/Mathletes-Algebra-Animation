@@ -30,7 +30,7 @@ export default makeScene2D(function* (view) {
       ref={sumFormula}
       tex={[
         'x_1', '+', 'x_2', '=', 
-        '-\\textcolor{blue}{b}', '/', '\\textcolor{red}{a}'
+        '-\\frac{\\textcolor{blue}{b}}{\\textcolor{red}{a}}'
       ]}
       fill="white"
       y={0}
@@ -43,11 +43,11 @@ export default makeScene2D(function* (view) {
     <Latex
       ref={productFormula}
       tex={[
-        'x_1', 'x_2', '=', 
-        '\\textcolor{green}{c}', '/', '\\textcolor{red}{a}'
+        'x_1', '\\cdot','{x_2}', '=', 
+        '\\frac{\\textcolor{green}{c}}{\\textcolor{red}{a}}'
       ]}
       fill="white"
-      y={100}
+      y={150}
       fontSize={48}
       opacity={0}
     />
