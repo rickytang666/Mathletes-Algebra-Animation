@@ -79,33 +79,41 @@ export default makeScene2D(function* (view) {
       <Line
         ref={line1}
         points={[coords1[0]]}
-        stroke="#FF4D4D"
-        lineWidth={10}
-        shadowColor="#FF4D4D"
-        shadowBlur={25}
+        stroke="#FF5C5C"
+        lineWidth={14}
+        lineCap="round"
+        shadowColor="#FF5C5C"
+        shadowBlur={50}
+        shadowOffset={[0, 0]}
       />
       <Circle
         ref={walker1}
         position={coords1[0]}
-        width={18}
-        height={18}
-        fill="#FF4D4D"
+        width={20}
+        height={20}
+        fill="#FF5C5C"
+        shadowColor="#FF5C5C"
+        shadowBlur={40}
       />
 
       <Line
         ref={line2}
         points={[coords2[0]]}
-        stroke="#4DA6FF"
-        lineWidth={10}
-        shadowColor="#4DA6FF"
-        shadowBlur={25}
+        stroke="#33CCFF"
+        lineWidth={14}
+        lineCap="round"
+        shadowColor="#33CCFF"
+        shadowBlur={50}
+        shadowOffset={[0, 0]}
       />
       <Circle
         ref={walker2}
         position={coords2[0]}
-        width={18}
-        height={18}
-        fill="#4DA6FF"
+        width={20}
+        height={20}
+        fill="#33CCFF"
+        shadowColor="#33CCFF"
+        shadowBlur={40}
       />
     </>
   );
