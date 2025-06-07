@@ -1,11 +1,14 @@
 import {
   makeScene2D,
   Line,
+  Latex,
 } from '@motion-canvas/2d';
 import {
   createRef,
   Vector2,
   waitFor,
+  all,
+  chain,
 } from '@motion-canvas/core';
 
 // Converts a path like ['R','U','R'] into an array of screen-space coordinates
@@ -30,6 +33,18 @@ export default makeScene2D(function* (view) {
   const gridW = 14;
   const gridH = 8;
   const cellSize = 80;
+  const math = createRef<Latex>();
+
+  // Add math display
+  view.add(
+    <Latex
+      ref={math}
+      tex={['\\text{\\# Paths}=', '?']}
+      fill="white"
+      y={420}
+      fontSize={50}
+    />
+  );
 
   // Draw vertical grid lines
   for (let x = 0; x <= gridW; x++) {
@@ -101,8 +116,27 @@ export default makeScene2D(function* (view) {
   for (let i = 1; i < coords1.length; i++) {
     line1().points([...line1().points(), coords1[i]]);
     line2().points([...line2().points(), coords2[i]]);
-    yield* waitFor(0.06);
+    yield* waitFor(0.03);
   }
 
+  // Animate math
+  yield* math().tex(['\\text{\\# Paths}=', '\\binom{', '7', '}{', '3', '}^2'], 0.4);
+
+  yield* math().tex(['\\text{\\# Paths}=', '\\left( \\frac{7!}{3!4!} \\right)^2'], 0.6);
+
+  yield* math().tex(['\\text{\\# Paths}=', '35^2'], 0.4);
+
+  yield* all(
+    math().tex(['\\textbf{\\# Paths}=', '\\mathbf{1225}'], 0.3),
+    math().scale(1.4, 0.3),
+    math().fill('#ffce2e', 0.3),
+  );
+
+  yield* all(
+    math().scale(1.1, 0.3),
+    math().fill('#e3fa7f', 0.3),
+  );
+
   yield* waitFor(1);
+
 });
