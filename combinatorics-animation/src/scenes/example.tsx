@@ -79,7 +79,7 @@ export default makeScene2D(function* (view) {
         lineCap="round"
         lineJoin="round"
         shadowColor="#FF5C5C"
-        shadowBlur={60}
+        shadowBlur={100}
         shadowOffset={[0, 0]}
       />
 
@@ -91,7 +91,7 @@ export default makeScene2D(function* (view) {
         lineCap="round"
         lineJoin="round"
         shadowColor="#33CCFF"
-        shadowBlur={60}
+        shadowBlur={100}
         shadowOffset={[0, 0]}
       />
     </>
