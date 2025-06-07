@@ -1,12 +1,9 @@
 import {
   makeScene2D,
-  Circle,
   Line,
 } from '@motion-canvas/2d';
 import {
   createRef,
-  all,
-  easeInOutCubic,
   Vector2,
   waitFor,
 } from '@motion-canvas/core';
@@ -32,7 +29,7 @@ function pathToCoords(path: string[], size: number, gridW: number, gridH: number
 export default makeScene2D(function* (view) {
   const gridW = 14;
   const gridH = 8;
-  const cellSize = 55;
+  const cellSize = 80;
 
   // Draw vertical grid lines
   for (let x = 0; x <= gridW; x++) {
@@ -60,20 +57,18 @@ export default makeScene2D(function* (view) {
   }
 
   // Wriggly non-intersecting paths from bottom-left to top-right (14 R, 8 U = 22 steps)
-  const path1 = 'RRURRRUURRURURRRUURRRU'.split('');
-  const path2 = 'UUURURURRUURRRRURRRRRR'.split('');
+  const path1 = 'RRURRRUURRUUURURRRRURR'.split('');
+  const path2 = 'UURURRURRRRRRURRURRRUU'.split('');
 
   // Convert paths to canvas coordinates
   const coords1 = pathToCoords(path1, cellSize, gridW, gridH);
   const coords2 = pathToCoords(path2, cellSize, gridW, gridH);
 
-  // Create refs for each walker and path line
-  const walker1 = createRef<Circle>();
-  const walker2 = createRef<Circle>();
+  // Create refs for each path line
   const line1 = createRef<Line>();
   const line2 = createRef<Line>();
 
-  // Add walkers and glowing lines to scene
+  // Add glowing lines to scene (no walkers anymore)
   view.add(
     <>
       <Line
@@ -82,18 +77,10 @@ export default makeScene2D(function* (view) {
         stroke="#FF5C5C"
         lineWidth={14}
         lineCap="round"
+        lineJoin="round"
         shadowColor="#FF5C5C"
-        shadowBlur={50}
+        shadowBlur={60}
         shadowOffset={[0, 0]}
-      />
-      <Circle
-        ref={walker1}
-        position={coords1[0]}
-        width={20}
-        height={20}
-        fill="#FF5C5C"
-        shadowColor="#FF5C5C"
-        shadowBlur={40}
       />
 
       <Line
@@ -102,31 +89,19 @@ export default makeScene2D(function* (view) {
         stroke="#33CCFF"
         lineWidth={14}
         lineCap="round"
+        lineJoin="round"
         shadowColor="#33CCFF"
-        shadowBlur={50}
+        shadowBlur={60}
         shadowOffset={[0, 0]}
-      />
-      <Circle
-        ref={walker2}
-        position={coords2[0]}
-        width={20}
-        height={20}
-        fill="#33CCFF"
-        shadowColor="#33CCFF"
-        shadowBlur={40}
       />
     </>
   );
 
-  // Animate walkers and lines step-by-step
+  // Animate lines step-by-step (no tweening to avoid freeze)
   for (let i = 1; i < coords1.length; i++) {
-    yield* all(
-      walker1().position(coords1[i], 0.04, easeInOutCubic),
-      walker2().position(coords2[i], 0.04, easeInOutCubic),
-    );
-
     line1().points([...line1().points(), coords1[i]]);
     line2().points([...line2().points(), coords2[i]]);
+    yield* waitFor(0.06);
   }
 
   yield* waitFor(1);
