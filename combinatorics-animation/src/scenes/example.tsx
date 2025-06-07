@@ -12,7 +12,7 @@ import {
 } from '@motion-canvas/core';
 
 // Converts a path like ['R','U','R'] into an array of screen-space coordinates
-function pathToCoords(path: string[], size: number): Vector2[] {
+function pathToCoords(path: string[], size: number, gridW: number, gridH: number): Vector2[] {
   let x = 0, y = 0;
   const coords = [new Vector2(x, y)];
   for (const move of path) {
@@ -23,16 +23,16 @@ function pathToCoords(path: string[], size: number): Vector2[] {
   // Transform to canvas coordinates (centered origin)
   return coords.map(v =>
     new Vector2(
-      v.x * size - 8 * size / 2,
-      -(v.y * size - 6 * size / 2),
+      v.x * size - gridW * size / 2,
+      -(v.y * size - gridH * size / 2),
     )
   );
 }
 
 export default makeScene2D(function* (view) {
-  const gridW = 8;
-  const gridH = 6;
-  const cellSize = 60;
+  const gridW = 14;
+  const gridH = 8;
+  const cellSize = 55;
 
   // Draw vertical grid lines
   for (let x = 0; x <= gridW; x++) {
@@ -59,13 +59,13 @@ export default makeScene2D(function* (view) {
     );
   }
 
-  // Two predefined non-intersecting paths from bottom-left to top-right
-  const path1 = 'RURRRRRRUUURUU'.split(''); // Red path
-  const path2 = 'UUUUUURRRRRRRR'.split(''); // Blue path
+  // Wriggly non-intersecting paths from bottom-left to top-right (14 R, 8 U = 22 steps)
+  const path1 = 'RRURRRUURRURURRRUURRRU'.split('');
+  const path2 = 'UUURURURRUURRRRURRRRRR'.split('');
 
   // Convert paths to canvas coordinates
-  const coords1 = pathToCoords(path1, cellSize);
-  const coords2 = pathToCoords(path2, cellSize);
+  const coords1 = pathToCoords(path1, cellSize, gridW, gridH);
+  const coords2 = pathToCoords(path2, cellSize, gridW, gridH);
 
   // Create refs for each walker and path line
   const walker1 = createRef<Circle>();
@@ -73,14 +73,16 @@ export default makeScene2D(function* (view) {
   const line1 = createRef<Line>();
   const line2 = createRef<Line>();
 
-  // Add walkers and lines to scene
+  // Add walkers and glowing lines to scene
   view.add(
     <>
       <Line
         ref={line1}
-        points={[coords1[0]]} // start with initial point
+        points={[coords1[0]]}
         stroke="#FF4D4D"
         lineWidth={10}
+        shadowColor="#FF4D4D"
+        shadowBlur={25}
       />
       <Circle
         ref={walker1}
@@ -92,9 +94,11 @@ export default makeScene2D(function* (view) {
 
       <Line
         ref={line2}
-        points={[coords2[0]]} // start with initial point
+        points={[coords2[0]]}
         stroke="#4DA6FF"
         lineWidth={10}
+        shadowColor="#4DA6FF"
+        shadowBlur={25}
       />
       <Circle
         ref={walker2}
@@ -106,21 +110,16 @@ export default makeScene2D(function* (view) {
     </>
   );
 
-  // Animate step-by-step: walk to next position and extend line
-  // PROBLEM: line is updated after walker arrives — leads to visual lag
-  // SOLUTION: update line *during* the movement — see comment below
+  // Animate walkers and lines step-by-step
   for (let i = 1; i < coords1.length; i++) {
-    // Animate both walkers to next step over 0.05s
     yield* all(
-      walker1().position(coords1[i], 0.05, easeInOutCubic),
-      walker2().position(coords2[i], 0.05, easeInOutCubic),
+      walker1().position(coords1[i], 0.04, easeInOutCubic),
+      walker2().position(coords2[i], 0.04, easeInOutCubic),
     );
 
-    // WARNING: this updates line AFTER movement is complete,
-    // which can cause frame lag/desync — recommend interpolating line live
     line1().points([...line1().points(), coords1[i]]);
     line2().points([...line2().points(), coords2[i]]);
   }
 
-  yield waitFor(1);
+  yield* waitFor(1);
 });
