@@ -89,11 +89,11 @@ export default makeScene2D(function* (view) {
       <Line
         ref={line1}
         points={[coords1[0]]}
-        stroke="#FF5C5C"
+        stroke="#e33c98"
         lineWidth={14}
         lineCap="round"
         lineJoin="round"
-        shadowColor="#FF5C5C"
+        shadowColor="#e33c98"
         shadowBlur={100}
         shadowOffset={[0, 0]}
       />
@@ -101,11 +101,11 @@ export default makeScene2D(function* (view) {
       <Line
         ref={line2}
         points={[coords2[0]]}
-        stroke="#33CCFF"
+        stroke="#1cbdda"
         lineWidth={14}
         lineCap="round"
         lineJoin="round"
-        shadowColor="#33CCFF"
+        shadowColor="#1cbdda"
         shadowBlur={100}
         shadowOffset={[0, 0]}
       />
