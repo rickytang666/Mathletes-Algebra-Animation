@@ -8,22 +8,60 @@ export default makeScene2D(function* (view) {
   view.add(<Latex 
     ref={equation}
     fill="white"
-    tex={['\\text{num}=', '\\text{ABCDE}']}
+    tex={['\\text{num} =', '\\text{ABCDE}']}
     fontSize={55}
     opacity={0}
   />);
 
-  yield* equation().opacity(1, 1);
+  yield* equation().opacity(1, 0.5);
 
-  yield* equation().tex(['\\text{num}=', '10000A+1000B+100C+10D+E'], 1);
+  yield* equation().tex([
+    '\\text{num} =',
+    '10000', 'A', '+',
+    '1000', 'B', '+',
+    '100', 'C', '+',
+    '10', 'D', '+',
+    'E'
+  ], 0.3);
+
+  yield* equation().tex([
+    '\\text{num} =',
+    '(', '9999', 'A', '+', 'A', ')', '+',
+    '(', '999', 'B', '+', 'B', ')', '+',
+    '(', '99', 'C', '+', 'C', ')', '+',
+    '(', '9', 'D', '+', 'D', ')', '+', 'E'
+  ], 0.7);
+
+  yield* equation().tex([
+    '\\text{num} =',
+    '9999', 'A', '+',
+    '999', 'B', '+',
+    '99', 'C', '+',
+    '9', 'D', '+',
+    'A', '+', 'B', '+', 'C', '+', 'D', '+', 'E'
+  ], 0.5);
+
+  yield* equation().tex([
+    '\\text{num} =',
+    '\\textcolor{CornflowerBlue}{', 
+    '9999', 'A', '+',
+    '999', 'B', '+',
+    '99', 'C', '+',
+    '9', 'D', '}', '+',
+    'A', '+', 'B', '+', 'C', '+', 'D', '+', 'E'
+  ], 0.3);
   
-  yield* equation().tex(['\\text{num}=', '(9999A', '+A', ')+(999B', '+B', ')+(99C','+C', ')+(9D', '+D', ')', '+E'], 1);
+  yield* equation().tex([
+        '\\text{num}', '\\equiv{}',
+        'A', '+', 'B', '+', 'C', '+', 'D', '+', 'E', '\\quad', '(\\bmod\\ 9)'
+      ], 0.5);
+  
+  yield* all(
+    equation().scale(1.3, 0.3),
+    equation().fill("EF58A0", 0.3),
+  );
 
-  yield* equation().tex(['\\text{num}=', '9999A', '+999B', '+99C', '+9D','+A', '+B', '+C', '+D', '+E'], 1);
-
-  yield* equation().tex(['\\text{num}=', '\\textcolor{CornflowerBlue}{9999A+999B+99C+9D}','+A', '+B', '+C', '+D', '+E'], 1);
-
-  yield* equation().tex(['\\text{num}', '\\equiv{}', 'A', '+B', '+C', '+D', '+E', '\\quad', '(\\bmod 9)'], 1);
+  yield* equation().scale(1.1, 0.2);
 
   yield* waitFor(1);
 });
