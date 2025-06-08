@@ -1,1 +1,1 @@
-# Mathletes-Algebra-Animation
+# Animations for LHSS Mathletes Promotional Video
