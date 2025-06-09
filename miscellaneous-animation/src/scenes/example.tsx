@@ -67,6 +67,8 @@ export default makeScene2D(function* (view) {
   }
 
   const message = createRef<Txt>();
+  const ruleText = createRef<Txt>();
+
   view.add(
     <Txt
       ref={message}
@@ -79,8 +81,23 @@ export default makeScene2D(function* (view) {
     />
   );
 
+  view.add(
+    <Txt
+      ref={ruleText}
+      y={squareSize * 2 + 90}
+      fontSize={28}
+      fontWeight={500}
+      fill="#bbbbbb"
+      text="All rows, columns, and diagonals must add up to the same number."
+      opacity={0}
+    />
+  );
+
   yield* all(...enterAnimations);
-  yield* message().opacity(1, 0.3);
+  yield* all(
+    message().opacity(1, 0.3),
+    ruleText().opacity(1, 0.3)
+  );
   yield* waitFor(0.5);
 
   const updates = [];
@@ -99,7 +116,7 @@ export default makeScene2D(function* (view) {
 
   yield* all(
     message().text("You got it! ✅", 0.4),
-    message().fill("#33ff99", 0.4),
+    message().fill("#33ff99", 0.4)
   );
 
   yield* waitFor(0.5);
