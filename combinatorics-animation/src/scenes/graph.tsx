@@ -2,6 +2,7 @@ import {
   makeScene2D,
   Line,
   Latex,
+  Img,
 } from '@motion-canvas/2d';
 import {
   createRef,
@@ -9,7 +10,12 @@ import {
   waitFor,
   all,
   chain,
+  loop,
+  tween,
+  easeInOutCubic,
 } from '@motion-canvas/core';
+
+import jingxuanHead from '../../images/jingxuan_head.png';
 
 // Converts a path like ['R','U','R'] into an array of screen-space coordinates
 function pathToCoords(path: string[], size: number, gridW: number, gridH: number): Vector2[] {
@@ -112,10 +118,26 @@ export default makeScene2D(function* (view) {
     </>
   );
 
-  // Animate lines step-by-step (no tweening to avoid freeze)
+  // Head image ref
+  const head = createRef<Img>();
+
+  // Add animated head image at bottom-left corner
+  view.add(
+    <Img
+      ref={head}
+      src={jingxuanHead}
+      width={100}
+      rotation={0}
+      x={-600}
+      y={400}
+    />
+  );
+
+  // Animate lines step-by-step and animate head
   for (let i = 1; i < coords1.length; i++) {
     line1().points([...line1().points(), coords1[i]]);
     line2().points([...line2().points(), coords2[i]]);
+
     yield* waitFor(0.03);
   }
 
