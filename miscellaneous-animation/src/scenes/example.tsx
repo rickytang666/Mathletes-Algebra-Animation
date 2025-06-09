@@ -1,5 +1,5 @@
 import {makeScene2D, Rect, Txt} from '@motion-canvas/2d';
-import {all, createRef, waitFor} from '@motion-canvas/core';
+import {all, createRef, waitFor, tween, easeOutBack} from '@motion-canvas/core';
 
 export default makeScene2D(function* (view) {
   const squareSize = 130;
@@ -18,6 +18,8 @@ export default makeScene2D(function* (view) {
 
   const cells: Rect[][] = [];
   const labels: Txt[][] = [];
+
+  const enterAnimations = [];
 
   for (let row = 0; row < 3; row++) {
     const cellRow: Rect[] = [];
@@ -39,6 +41,7 @@ export default makeScene2D(function* (view) {
           stroke="#ffffff"
           lineWidth={4}
           radius={18}
+          scale={0}
         >
           <Txt
             ref={label}
@@ -46,8 +49,14 @@ export default makeScene2D(function* (view) {
             fontWeight={700}
             fill={knownMask[row][col] ? "#ffffff" : "#ffaa00"}
             text={knownMask[row][col] ? numbers[row][col].toString() : "?"}
+            opacity={0}
           />
         </Rect>
+      );
+
+      enterAnimations.push(
+        tween(0.3, value => rect().scale(easeOutBack(value))),
+        tween(0.3, value => label().opacity(value))
       );
 
       cellRow.push(rect());
@@ -66,9 +75,12 @@ export default makeScene2D(function* (view) {
       fontWeight={600}
       fill="#ffffff"
       text="Solve it?"
+      opacity={0}
     />
   );
 
+  yield* all(...enterAnimations);
+  yield* message().opacity(1, 0.3);
   yield* waitFor(0.5);
 
   const updates = [];
@@ -84,8 +96,9 @@ export default makeScene2D(function* (view) {
   }
 
   yield* all(...updates);
+
   yield* all(
-    message().text("You got it!", 0.4),
+    message().text("You got it! ✅", 0.4),
     message().fill("#33ff99", 0.4),
   );
 
