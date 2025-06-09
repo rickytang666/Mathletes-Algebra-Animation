@@ -1,13 +1,19 @@
 import {makeScene2D, Rect, Txt} from '@motion-canvas/2d';
-import {all, chain, createRef, waitFor} from '@motion-canvas/core';
+import {all, createRef, waitFor} from '@motion-canvas/core';
 
 export default makeScene2D(function* (view) {
-  const squareSize = 120;
-  const spacing = 10;
+  const squareSize = 130;
+  const spacing = 14;
   const numbers = [
     [2, 7, 6],
     [9, 5, 1],
     [4, 3, 8]
+  ];
+
+  const knownMask = [
+    [true, true, true],
+    [true, false, false],
+    [false, true, true]
   ];
 
   const cells: Rect[][] = [];
@@ -27,16 +33,19 @@ export default makeScene2D(function* (view) {
           y={row * (squareSize + spacing) - squareSize - spacing}
           width={squareSize}
           height={squareSize}
-          fill="#ffffff10"
+          fill="#222"
+          shadowColor="#ffffff40"
+          shadowBlur={12}
           stroke="#ffffff"
           lineWidth={4}
-          radius={12}
+          radius={18}
         >
           <Txt
             ref={label}
-            fontSize={40}
-            fill="#ffffff"
-            text={""}
+            fontSize={46}
+            fontWeight={700}
+            fill={knownMask[row][col] ? "#ffffff" : "#ffaa00"}
+            text={knownMask[row][col] ? numbers[row][col].toString() : "?"}
           />
         </Rect>
       );
@@ -48,12 +57,37 @@ export default makeScene2D(function* (view) {
     labels.push(labelRow);
   }
 
+  const message = createRef<Txt>();
+  view.add(
+    <Txt
+      ref={message}
+      y={squareSize * 2 + 40}
+      fontSize={42}
+      fontWeight={600}
+      fill="#ffffff"
+      text="Solve it?"
+    />
+  );
+
   yield* waitFor(0.5);
+
+  const updates = [];
   for (let row = 0; row < 3; row++) {
     for (let col = 0; col < 3; col++) {
-      yield* labels[row][col].text(numbers[row][col].toString(), 0.3);
+      if (!knownMask[row][col]) {
+        updates.push(
+          labels[row][col].text(numbers[row][col].toString(), 0.3),
+          labels[row][col].fill("#33ff99", 0.3)
+        );
+      }
     }
   }
+
+  yield* all(...updates);
+  yield* all(
+    message().text("You got it!", 0.4),
+    message().fill("#33ff99", 0.4),
+  );
 
   yield* waitFor(0.5);
 });
