@@ -9,13 +9,7 @@ import {
   Vector2,
   waitFor,
   all,
-  chain,
-  loop,
-  tween,
-  easeInOutCubic,
 } from '@motion-canvas/core';
-
-import jingxuanHead from '../../images/jingxuan_head.png';
 
 // Converts a path like ['R','U','R'] into an array of screen-space coordinates
 function pathToCoords(path: string[], size: number, gridW: number, gridH: number): Vector2[] {
@@ -48,7 +42,7 @@ export default makeScene2D(function* (view) {
       tex={['\\text{\\# Paths}=', '?']}
       fill="white"
       y={420}
-      fontSize={50}
+      fontSize={40}
     />
   );
 
@@ -118,21 +112,6 @@ export default makeScene2D(function* (view) {
     </>
   );
 
-  // Head image ref
-  const head = createRef<Img>();
-
-  // Add animated head image at bottom-left corner
-  view.add(
-    <Img
-      ref={head}
-      src={jingxuanHead}
-      width={100}
-      rotation={0}
-      x={-600}
-      y={400}
-    />
-  );
-
   // Animate lines step-by-step and animate head
   for (let i = 1; i < coords1.length; i++) {
     line1().points([...line1().points(), coords1[i]]);
@@ -142,14 +121,14 @@ export default makeScene2D(function* (view) {
   }
 
   // Animate math
-  yield* math().tex(['\\text{\\# Paths}=', '\\binom{', '7', '}{', '3', '}^2'], 0.4);
+  yield* math().tex(['\\text{\\# Paths}=', '{{ \\binom{ }}', '11', '}{', '4', '}^2'], 0.4);
 
-  yield* math().tex(['\\text{\\# Paths}=', '\\left( \\frac{7!}{3!4!} \\right)^2'], 0.6);
+  yield* math().tex(['\\text{\\# Paths}=', '\\left( \\frac{11!}{4!7!} \\right)^2'], 0.6);
 
-  yield* math().tex(['\\text{\\# Paths}=', '35^2'], 0.4);
+  yield* math().tex(['\\text{\\# Paths}=', '330^2'], 0.4);
 
   yield* all(
-    math().tex(['\\textbf{\\# Paths}=', '\\mathbf{1225}'], 0.3),
+    math().tex(['\\textbf{\\# Paths}=', '\\mathbf{108900}'], 0.3),
     math().scale(1.4, 0.3),
     math().fill('#ffce2e', 0.3),
   );
